@@ -33,7 +33,7 @@ class DeSettingsController < ApplicationController
 
   def index
       if current_user.nil?
-          redirect_to root_path
+          redirect_to root_url
       else
           @mine = current_user.de_settings
           @others = Visited.where(:user => current_user).map(&:de_setting).select {|de| de.user != current_user}

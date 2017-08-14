@@ -9,8 +9,8 @@
 
 append :linked_files, "db/production.sqlite3"
 
-server "degust.erc.monash.edu",
-  user: "degust2",
+server "localhost",
+  user: "root",
   roles: %w(app db web),
   ssh_options: {
       keys_only: true,    # Important to stop Net::SSH trying all keys in the agent!

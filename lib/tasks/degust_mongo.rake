@@ -5,8 +5,8 @@ namespace :degust_mongo do
       users = []
       str.each_line do |line|
           user = JSON.parse(line)
-          if user['twitter']
-              user['added'] = User.create!(provider: 'twitter', uid: user['twitter']['id'])
+          if user['wechat']
+              user['added'] = User.create!(provider: 'open_wechat', uid: user['wechat']['id'])
           elsif user['google']
               user['added'] = User.create!(provider: 'google_oauth2', uid: user['google']['id'])
           end

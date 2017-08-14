@@ -21,7 +21,7 @@ gem 'bootstrap-social-rails'
 gem 'haml-rails'
 gem 'high_voltage'
 gem 'omniauth'
-gem 'omniauth-twitter'
+gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 gem 'simple_form'
 
@@ -50,7 +50,8 @@ group :development do
 
   gem 'capistrano'
   gem 'capistrano-rails'
+  gem 'capistrano3-puma'
   gem 'capistrano-rbenv'
   gem 'capistrano-bundler'
-  gem 'capistrano-passenger'
+#  gem 'capistrano-passenger'
 end

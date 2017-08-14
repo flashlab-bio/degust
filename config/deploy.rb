@@ -1,15 +1,15 @@
 # config valid only for current version of Capistrano
-lock "3.8.0"
+lock "3.9.0"
 
 set :application, "degust"
-set :repo_url, "https://github.com/drpowell/degust.git"
-
+set :repo_url, "https://github.com/flashlab-bio/degust.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, ENV["REVISION"] || ENV["BRANCH_NAME"]
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/mnt/degust-rails/"
+set :deploy_to, "/var/local/www/degust-rails/"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -30,12 +30,16 @@ append :linked_dirs, "uploads", "log", "degust-frontend/node_modules", "tmp/pids
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
-set :keep_releases, 5
+set :keep_releases, 2
 
 set :rails_assets_groups, :assets
 
 set :rbenv_ruby, '2.4.0'
 
+# PUMA
+# set :puma_bind, "tcp://0.0.0.0:3000"
+set :puma_workers, 2
+set :nginx_sites_available_path, "/etc/nginx/conf.d"
 
 # Task to build frontend on remote host.
 namespace :deploy do
@@ -63,6 +67,7 @@ namespace :deploy do
 
     task :restart do
         on roles(:app) do
+	    invoke 'puma:restart'
             execute "touch #{ current_path }/tmp/restart.txt"
         end
     end

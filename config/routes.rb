@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+scope '/deg' do
   resources :users
   root to: 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
@@ -25,4 +26,5 @@ Rails.application.routes.draw do
   end
   get '/degust/kegg/*page' => 'degust#static_kegg'
   get '/degust/*page' => 'degust#static'
+end
 end
