@@ -22,7 +22,7 @@ gem 'haml-rails'
 gem 'high_voltage'
 gem 'omniauth'
 gem 'omniauth-github'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-weibo-oauth2', :github => 'hyp3rventures/omniauth-weibo-oauth2', branch: "feature/add_redirect_uri_to_access_token_params"
 gem 'simple_form'
 
 gem 'browser-timezone-rails'

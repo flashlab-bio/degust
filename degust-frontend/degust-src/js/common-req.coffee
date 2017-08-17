@@ -13,7 +13,7 @@ require('./gene_data.coffee')
 
 # Display a popup warning, or fill in a warning box if using IE
 add_browser_warning = () ->
-	if window.navigator.userAgent.indexOf("MSIE ")>=0
+	if window.navigator.userAgent.indexOf("MSIE")>=0 || window.navigator.appVersion.indexOf('Trident/')>=0
 		html = require("../templates/browser-warning.hbs")()
 		outer = $('.browser-warning-outer')
 		if outer.length==0

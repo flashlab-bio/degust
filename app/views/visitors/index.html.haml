@@ -8,25 +8,25 @@
           %img{:src => 'https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png', :alt=>'Fork me on GitHub'}
       %h1 Degust
       %p.lead
-        RNA-seq exploration, analysis and visualisation
+        分析处理RNA-seq数据以及基本的可视化操作
       %p
-        Simply upload a CSV file of read counts for each replicate; then view your DGE data
+        上传包含每个样本reads数量的CSV文件，即可进行表达差异分析
       %p
-        %a.btn.btn-primary.btn-large{:href=> "#{upload_path}"} Upload your counts file &raquo;
+        %a.btn.btn-primary.btn-large{:href=> "#{upload_path}"} 上传reads数统计文件 &raquo;
 
     .margin-top.col-md-4
       .panel.panel-default
         .panel-body
-          %h3 Get Started
-          %p Get started with Degust with your own data set.  Just upload a CSV counts file from your RNA-seq experiment, or upload a CSV file containing your own analysis (eg. from Limma/Voom, edgeR or DESeq).
-          %a.btn.btn-default.btn-block{:href=> "#{upload_path}"} Upload &raquo;
+          %h3 如何开始
+          %p Degust需要RNA-seq数据预处理后的文件作为输入.你可以上传原始的reads count文件，或者包含差异分析结果的文件（来源包括Limma/Voom, edgeR 或者 DESeq）。
+          %a.btn.btn-default.btn-block{:href=> "#{upload_path}"} 上传数据 &raquo;
       - if !user_signed_in?
         %a.btn.btn-block.btn-social.btn-github{:href => "#{root_path}/auth/github"}
           %span.fa.fa-github
-          Sign in with Github
-        %a.btn.btn-block.btn-social.btn-google{:href => "#{root_path}/auth/google_oauth2"}
-          %span.fa.fa-google
-          Sign in with Google
+          用Github帐号登录
+        %a.btn.btn-block.btn-social.btn-google{:href => "#{root_path}/auth/weibo"}
+          %span.fa.fa-weibo
+          用新浪微博帐号登录
     -#.col-md-4
   -#.row
 
@@ -34,18 +34,19 @@
     .col-md-4
       .panel.panel-default
         .panel-body
-          %h3 Play with a Demo
+          %h3 示例
           %p
-            Try a demo of Degust on a real data set.  See the CSV
-            %a{:href=>"https://drpowell.github.io/degust/example-counts.csv"}
-              counts file
-            used to create this example
-          %a.btn.btn-default.btn-block{:href=>'http://degust.erc.monash.edu/degust/compare.html?code=example'} Try the demo &raquo;
+            你可以预览这个基于
+            %a{:href=>"https://drpowell.github.io/degust/example-counts.csv"}真实数据
+            生成的演示程序。或者点击
+            %a{:href=>'http://degust.erc.monash.edu/degust/compare.html?code=example'}这里
+            观看教学视频。
+          %a.btn.btn-default.btn-block{:href=>'http://degust.erc.monash.edu/degust/compare.html?code=example'} 进入演示 &raquo;
     .col-md-4
       .panel.panel-default
         .panel-body
-          %h3 Watch a Demo
-          %p Watch of video of Degust in action on a real data set.
-          %a.btn.btn-default.btn-block{:href=>'https://www.youtube.com/watch?v=ucucQ_LtZ1g'} Watch video &raquo;
+          %h3 说明
+          %p Degust国内镜像，不提供任何承诺
+          %a.btn.btn-default.btn-block{:href=>'http://degust.erc.monash.edu'} 原始链接 &raquo;
 
 -#.container

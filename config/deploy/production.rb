@@ -14,6 +14,9 @@ server "localhost",
   roles: %w(app db web),
   ssh_options: {
       keys_only: true,    # Important to stop Net::SSH trying all keys in the agent!
+      forward_agent: true,
+      paranoid: true,
+      keys: "~/.ssh/id_rsa"
   }
 
 

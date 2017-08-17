@@ -90,7 +90,7 @@ save = (ev) ->
         data: {settings: JSON.stringify(mod_settings)},
         dataType: 'json'
     }).done((x) ->
-        $('#saving-modal .modal-body').html("<div class='alert alert-success'>Save successful.</div>")
+        $('#saving-modal .modal-body').html("<div class='alert alert-success'>保存成功！</div>")
         $('#saving-modal .view').show()
      ).fail((x) ->
         log_error("ERROR",x)
@@ -124,6 +124,8 @@ update_data = () ->
     $("input.name").val(mod_settings.name || "")
     $("input.primary").val(mod_settings.primary_name || "")
     $("input.link-url").val(mod_settings.link_url || "")
+    if mod_settings.hasOwnProperty('org_code')
+        $("select.org-code option[value='#{mod_settings.org_code}']").attr('selected','selected')
     if mod_settings.hasOwnProperty('min_counts')
         $("input.min-counts").val(mod_settings.min_counts)
     if mod_settings.hasOwnProperty('min_cpm')
@@ -311,6 +313,13 @@ init_page = () ->
             delete mod_settings.ec_column
         else
             mod_settings.ec_column = column_keys[mod_settings.ec_column]
+        warnings()
+    )
+
+    $('select.org-code').change(() ->
+        mod_settings.org_code = $("select.org-code option:selected").val()
+        if mod_settings.org_code == "any"
+            delete mod_settings.org_code
         warnings()
     )
 

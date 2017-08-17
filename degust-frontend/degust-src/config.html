@@ -1,6 +1,7 @@
 <html>
   <head profile="http://www.w3.org/2005/10/profile">
     <link rel="icon" type="image/png" href="images/favicon.png"/>
+  <meta charset='utf-8'>
 
     <!-- Externals CSS -->
     <link rel="stylesheet" href="./css/lib.css" />
@@ -18,74 +19,80 @@
     <div class="navbar navbar-inverse navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/deg">Degust : </a>
-          <span class="navbar-brand exp-name">unnamed</span>
+          <a class="navbar-brand" href="/">Degust : </a>
+          <span class="navbar-brand exp-name">未命名</span>
         </div>
         <ul class="nav navbar-nav navbar-right navbar-collapse collapse" id="right-navbar-collapse">
-          <li><a class="log-link" href="#">Logs</a>
-          <li><a class="view" href="#">View</a>
-          <li><a href="#about-modal" data-toggle="modal">About</a>
+          <li><a class="log-link" href="#">日志</a>
+          <li><a class="view" href="#">查看</a>
+          <li><a href="#about-modal" data-toggle="modal">关于</a>
         </ul>
       </div>
     </div>
 
     <div class='log-list'>
-      <h4>Log messages</h4>
+      <h4>日志信息</h4>
     </div>
 
     <div class="container">
-      <h1>Configuration</h1>
+      <h1>初始设置</h1>
 
       <div class="row">
         <div class="col-md-12 options">
           <form class="form-horizontal">
 
           <div class="form-group">
-            <label class="control-label col-sm-3" for="name">Name</label>
+            <label class="control-label col-sm-3" for="name">名称</label>
             <div class="controls col-sm-8">
-              <input class="name" type="text" name="name" placeholder="Unnamed" title="Optional: Give your experiment a name" data-placement='right' size='30' />
+              <input class="name" type="text" name="name" placeholder="Unnamed" title="项目名称（可选）" data-placement='right' size='30' />
             </div>
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3">Format type</label>
+            <label class="control-label col-sm-3">文件类型</label>
             <div class="controls col-sm-6">
               <label class="radio">
-                <input type="radio" name="fmt" class="fmt" id="fmt-csv" value="CSV">Comma separated (CSV)
+                <input type="radio" name="fmt" class="fmt" id="fmt-csv" value="CSV">CSV（逗号分隔的）
               </label>
               <label class="radio">
-                <input type="radio" name="fmt" class="fmt" id="fmt-tab" value="TAB">TAB separated (TSV)
+                <input type="radio" name="fmt" class="fmt" id="fmt-tab" value="TAB">TSV（制表符分隔的）
               </label>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3">Info columns</label>
-            <div class="controls col-sm-6">
-              <select class="info-columns" multiple="multiple" title="Columns to include in the gene-list table" data-placement='right'></select>
+            <label class="control-label col-sm-3">信息栏</label>
+            <div class="controls col-sm-3" title="将在基因列表中显示的列">
+              <select class="info-columns" multiple="multiple" data-placement='right'></select>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-3">EC Number column</label>
-            <div class="controls col-sm-6">
-              <select class="ec-column" title="Column containing EC numbers for each gene, used to display Kegg pathways" data-placement='right'></select>
+            <label class="control-label col-sm-3">Kegg栏</label>
+            <div class="controls col-sm-2">
+              <select class="ec-column" title="包含可被Kegg识别的信息，如'CG0110'" data-placement='right'></select>
+            </div>
+            <label class="control-label col-sm-2">物种</label>
+            <div class="controls col-sm-2">
+              <select class="org-code" title="用于Kegg指定物种信息（可选）" data-placement='right'>
+                <option value="any">--- Default ---</option><option value="dme">果蝇</option><option value="hsa">人</option>
+              </select>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-3">Gene link column</label>
+            <label class="control-label col-sm-3">外链栏</label>
             <div class="controls col-sm-6">
-              <select class="link-column" title="Column containing information for external linking" data-placement='right'></select>
+              <select class="link-column" title="用来组成外链某一部分的列" data-placement='right'></select>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-3">Gene link URL</label>
+            <label class="control-label col-sm-3">外链格式</label>
             <div class="controls col-sm-6">
-              <input class="link-url" type="text" size='50' placeholder="Leave blank to have Degust guess" title="Optional: External link for genes.  Any '%s' in the link will be replaced by the defined link column" data-placement='right' />
+              <input class="link-url" type="text" size='50' placeholder="留空则系统尝试指定" title="基因对应的外部链接，'%s'会被替换成外链栏中的内容（可选）" data-placement='right' />
             </div>
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" for="analyze-server-side">Analyze server side</label>
+            <label class="control-label col-sm-3" for="analyze-server-side">服务端分析</label>
             <div class="controls col-sm-6">
               <input id="analyze-server-side" type="checkbox" />
             </div>
@@ -93,36 +100,37 @@
 
           <div class="server-side-analysis-fields">
             <div class="form-group">
-              <label class="control-label col-sm-3" for="name">Min gene read count</label>
+              <label class="control-label col-sm-3" for="name">最小reads数</label>
               <div class="controls col-sm-6">
-                <input class="min-counts" type="text" name="min-counts" placeholder="0" title="Optional: Minimum read count required in at least one replicate or the gene is ignored" data-placement='right' />
+                <input class="min-counts" type="text" name="min-counts" placeholder="0" title="至少需要一个重复满足最小reads数，否则基因会被忽略（可选）" data-placement='right' />
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-3" for="name">Min gene CPM</label>
+              <label class="control-label col-sm-3" for="name">最小CPM值</label>
               <div class="controls col-sm-2">
-                <input class="min-cpm" type="text" name="min-cpm" placeholder="0" title="Optional: A gene must have at a CPM of at least this, in at least the number of specified samples" data-placement='right' />
+                <input class="min-cpm" type="text" name="min-cpm" placeholder="0" title="所有基因必须满足最少在某一数量样本中CPM值大于该指定值（可选）" data-placement='right' />
               </div>
-              <label class="control-label col-sm-2" for="name">in at least samples</label>
+              <label class="control-label col-sm-2" for="name">至少在</label>
               <div class="controls col-sm-3">
-                <input class="min-cpm-samples" type="text" name="min-cpm" placeholder="0" title="Optional: A gene must have at a CPM of at least this, in at least the number of specified samples" data-placement='right' />
+                <input class="min-cpm-samples" type="text" name="min-cpm" placeholder="0" title="所有基因必须满足最少在该指定数量样本中CPM值大于某一值（可选）" data-placement='right' />
               </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-sm-3" for="config-locked">Config locked</label>
+              <label class="control-label col-sm-3" for="config-locked">锁定配置</label>
               <div class="controls col-sm-6">
-                <input id="config-locked" type="checkbox" title="Lock the configuration page so only you can change it (you must be logged in)" data-placement='right' />
+                <input id="config-locked" type="checkbox" title="锁定设置，只有创建者可以更改（需要登录）" data-placement='right' />
               </div>
             </div>
 
 
-            <div class="condition-group conditions">
+            <div class="condition-group conditions" style="max-width:800px;margin:auto">
               <div class="form-group">
-                <span class="control-label col-sm-3">Condition name</span>
-                <div class="controls col-sm-6">
-                  <span>Replicates</span>
-                </div>
+                <span class="control-label col-sm-3">条件组名称</span>
+                <span class="control-label col-sm-1" style="text-align:left;">重复</span>
+                 <div class="form-group col-sm-2">
+                   <button type="button" id="add-condition" class="btn btn-primary" title="增加新的条件（处理）组" data-placement='right'>添加条件组</button>
+                 </div>
               </div>
 
               <div class="form-group condition template">
@@ -131,55 +139,49 @@
                 </div>
                 <div class="controls col-sm-9">
                   <select class="columns" multiple="multiple"></select>
-                  <label class='init-select'><input type="checkbox"  />Initial select</label>
-                  <label class='hidden-factor'><input type="checkbox" />Hidden Factor</label>
+                  <label class='init-select'><input type="checkbox"  />默认选中</label>
+                  <label class='hidden-factor'><input type="checkbox" />隐藏分组</label>
                   <button type="button" class="del-condition">&times;</button>
                 </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-3">
-                <button type="button" id="add-condition" class="btn btn-primary" title="Add a new condition or treatment" data-placement='right'>Add condition</button>
               </div>
             </div>
           </div>
 
           <div class="user-analysed-fields">
             <div class="form-group">
-              <label class="control-label col-sm-3" for="primary">Primary condition</label>
+              <label class="control-label col-sm-3" for="primary">对照组</label>
               <div class="controls col-sm-6">
-                <input class="primary" type="text" name="primary" placeholder="Primary" title="Name of the condition your fold-change data is relative to" data-placement='right' />
+                <input class="primary" type="text" name="primary" placeholder="Primary" title="计算fold-change时作为参照组的名称" data-placement='right' />
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-3">FDR column</label>
+              <label class="control-label col-sm-3">FDR栏</label>
               <div class="controls col-sm-6">
-                <select id="fdr-column" title="Column containing the False-Discovery-Rate.  Sometimes called 'adj.P.Val'" data-placement='right'></select>
+                <select id="fdr-column" title="包含FDR数据的列，也称'adj.P.Val'" data-placement='right'></select>
                 <span class='text-error'></span>
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-3">Average expression column</label>
+              <label class="control-label col-sm-3">平均表达量栏</label>
               <div class="controls col-sm-6">
-                <select id="avg-column" title="Column containing the average (log) expression information.  Often called 'Amean' or 'AveExpr'" data-placement='right'></select>
+                <select id="avg-column" title="包含平均表达量（对数）数据的列，也称'Amean'或'AveExpr'" data-placement='right'></select>
                 <span class='text-error'></span>
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-3">Fold-change columns</label>
+              <label class="control-label col-sm-3">Fold-change栏</label>
               <div class="controls col-sm-6">
-                <select class="fc-columns" multiple="multiple" title="Columns containg the log fold-change data" data-placement='right'></select>
+                <select class="fc-columns" multiple="multiple" title="包含变化倍率对数值的列" data-placement='right'></select>
               </div>
             </div>
           </div>
-
+          <hr>
 
           <div class="form-group">
-            <div class="col-sm-12">
-              <button type="submit" id="save" class="btn btn-success">Save changes</button>
-              <button type="button" id="cancel" class="btn btn-default">Revert</button>
-              <a class="view btn btn-default" href="#" title="View main page.  Note unsaved configuration will be lost" data-placement='right'>View</a>
+            <div class="col-sm-5">
+              <button type="submit" id="save" class="btn btn-success">应用更改</button>
+              <button type="button" id="cancel" class="btn btn-default">恢复默认</button>
+              <a class="view btn btn-default" href="#" title="查看结果页，注意未保存的更改会丢失" data-placement='right'>查看</a>
             </div>
           </div>
         </form>
@@ -194,13 +196,13 @@
       <div class='modal-dialog'>
         <div class='modal-content'>
           <div class='modal-header'>
-            <h3 id="myModalLabel">Saving settings</h3>
+            <h3 id="myModalLabel">保存设置</h3>
           </div>
           <div class="modal-body">
           </div>
           <div class="modal-footer">
-            <button id="close-modal" class="btn btn-primary">Close</button>
-            <a class="view btn btn-default" href="#">View</a>
+            <button id="close-modal" class="btn btn-primary">关闭</button>
+            <a class="view btn btn-default" href="#">查看</a>
             <!-- <button class="btn btn-primary">Save changes</button> -->
           </div>
         </div><!-- /.modal-content -->

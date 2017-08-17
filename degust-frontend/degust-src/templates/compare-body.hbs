@@ -13,18 +13,18 @@
         </div>
 
         <ul class="nav navbar-nav navbar-right navbar-collapse collapse" id="right-navbar-collapse">
-          <li><a class="log-link" href="#">Logs</a>
-          <li><a id="tour" href="#">Tour</a>
-          <li><a class="config hide" href="#">Configure</a>
+          <li><a class="log-link" href="#">日志</a>
+          <li><a id="tour" href="#">教程</a>
+          <li><a class="config hide" href="#">配置</a>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">QC <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">质控 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#" class='p-value-histogram'>P-value histogram</a></li>
-              <li><a href="#" class='bargraph-libsize'>Library size</a></li>
-              <li><a href="#" class='expression-boxplot'>Expression box-whisker</a></li>
+              <li><a href="#" class='p-value-histogram'>P值直方图</a></li>
+              <li><a href="#" class='bargraph-libsize'>文库大小</a></li>
+              <li><a href="#" class='expression-boxplot'>表达水平箱线图</a></li>
             </ul>
           </li>
-          <li><a href="#about-modal" data-toggle="modal">About</a>
+          <li><a href="#about-modal" data-toggle="modal">关于</a>
         </ul>
       </div>
     </div>
@@ -36,15 +36,15 @@
     <div class='container'>
       <div class='right'>
         <ul class="nav nav-tabs">
-          <li id='select-options'><a href="#">Options</a></li>
-          <li id='select-single-gene-expr'><a href="#">Gene</a></li>
+          <li id='select-options'><a href="#">选项</a></li>
+          <li id='select-single-gene-expr'><a href="#">基因</a></li>
         </ul>
 
         <div class='single-gene-expr'>
         </div>
 
         <div class='filter options'>
-          <h4>Options</h4>
+          <h4>参数</h4>
           <div title='Filter genes by False Discovery Rate' data-placement='left'>
             <label>FDR cut-off</label>
             <input class="fdr-fld" type="text" value="0.01" />
@@ -81,7 +81,7 @@
             </span>
           </div>
           <div title='Show FC from selected condition' data-placement='left'>
-            <label for='fc-relative'>FC relative to</label>
+            <label for='fc-relative'>FC相对于</label>
             <select id='fc-relative'></select>
           </div>
           <div title='FC for the MA-plot' data-placement='left' class='ma-fc-col-opt'>
@@ -89,11 +89,11 @@
             <select id='ma-fc-col'></select>
           </div>
           <div title='Show raw counts (or counts-per-million) in the table' data-placement='left' class='show-counts-opt'>
-            <label for='show-counts'>Show Counts</label>
+            <label for='show-counts'>显示计数</label>
             <select id='show-counts'>
-              <option value='no'>No</option>
-              <option value='yes'>Yes</option>
-              <option value='cpm'>As counts-per-million</option>
+              <option value='no'>否</option>
+              <option value='yes'>是</option>
+              <option value='cpm'>每百万reads中</option>
             </select>
           </div>
           <div class='pca-opts'>
@@ -145,24 +145,24 @@
         </div>
 
         <div class='text-right'>
-          <a class='show-r-code' href='#'>Show R code</a>
+          <a class='show-r-code' href='#'>显示R代码</a>
         </div>
 
         <div class='text-right'>
-          <a class='update-link' href='#'>Update Link</a>
+          <a class='update-link' href='#'>更新本页链接</a>
         </div>
 
         <div class='text-right'>
-          <a class='show-heatmap' href='#'>Show heatmap</a>
+          <a class='show-heatmap' href='#'>显示热图</a>
         </div>
       </div>
 
       <div class='row'>
         <div class='col-xs-2 conditions'>
-          <h3>Conditions</h3>
+          <h3>实验组</h3>
           <div id='files'></div>
           <div id='hidden-factors'><h4>Hidden Factors</h4></div>
-          <label for='dge-method'>Method</label>
+          <label for='dge-method'>算法</label>
           <select id='dge-method'>
             <option value='voom'>Voom/Limma</option>
             <option value='edgeR'>edgeR</option>
@@ -196,22 +196,22 @@
       </div>
 
       <div class='row'>
-        <h2>Genes</h2>
+        <h2>基因集</h2>
         <div>
           <div class="tab-search">
-            Search:
+            搜索:
             <input type="text">
           </div>
           <div id='csv-download-div'>
-            <a id='csv-download' href='#'>Download CSV</a>
+            <a id='csv-download' href='#'>下载CSV</a>
             <span class="dropdown">
                 <button class="btn-link dropdown-toggle" type="button" id="dropDownload" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                   <span class="caret"></span>
                 </button>
               <ul class="dropdown-menu download" aria-labelledby="dropDownload">
-                <li><a href="#" class='download-csv'>Download as CSV</a></li>
-                <li><a href="#" class='download-tsv'>Download as TSV</a></li>
-                <li><a href="#" class='download-odf'>Download as ODF</a></li>
+                <li><a href="#" class='download-csv'>另存为CSV文件</a></li>
+                <li><a href="#" class='download-tsv'>另存为TSV文件</a></li>
+                <li><a href="#" class='download-odf'>另存为ODF文件</a></li>
               <ul>
             </span>
           </div>

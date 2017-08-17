@@ -65,11 +65,14 @@ class BackendCommon
             $('a.config').attr('href', BackendCommon.config_url())
 
     request_kegg_data: (callback) ->
-        d3.tsv(BackendCommon.script('kegg_titles'), (err,ec_data) ->
-            log_info("Downloaded kegg : rows=#{ec_data.length}")
-            log_debug("Downloaded kegg : rows=#{ec_data.length}",ec_data,err)
-            callback(ec_data)
-        )
+        if !@settings['org_code']
+            log_warn("orgnism not specified")
+        else
+            d3.tsv(BackendCommon.script('kegg_titles'), (err,ec_data) ->
+                log_info("Downloaded kegg : rows=#{ec_data.length}; organism=#{@settings['org_code']}")
+                log_debug("Downloaded kegg : rows=#{ec_data.length}",ec_data,err)
+                callback(ec_data)
+            )
 
 class WithBackendNoAnalysis
     constructor: (@settings, @process_dge_data, @full_settings) ->
@@ -96,7 +99,7 @@ class WithBackendNoAnalysis
             else
                data = d3.tsv.parse(dat)
             log_info("Parsed DGE CSV : rows=#{data.length}")
-            log_debug("Parsed DGE CSV : rows=#{data.length}",data,err)
+            # log_debug("Parsed DGE CSV : rows=#{data.length}",data,err)
 
             data_cols = @settings.info_columns.map((n) -> {idx: n, name: n, type: 'info' })
             data_cols.push({idx: '_dummy', type: 'primary', name:@settings.primary_name})
@@ -163,7 +166,7 @@ class WithBackendAnalysis
 
             data = d3.csv.parse(json.csv);
             log_info("Downloaded DGE counts : rows=#{data.length}")
-            log_debug("Downloaded DGE counts : rows=#{data.length}",data,err)
+            #log_debug("Downloaded DGE counts : rows=#{data.length}",data,err)
             log_info("Extra info : ",json.extra)
 
             @_extra_info(json.extra)
@@ -325,8 +328,11 @@ kegg_mouseover = (obj) ->
     rows = []
     ec_col = g_data.column_by_type('ec')
     return if ec_col==null
+    t = ec.split(/(?:^|\s)\w+:(?:Dmel_)?/)
     for row in g_data.get_data()
-        rows.push(row) if row[ec_col.idx] == ec
+        if row[ec_col.idx]
+            for h in t
+                rows.push(row) if h && row[ec_col.idx] == h
     current_plot.highlight(rows)
 
 # highlight parallel coords (and/or kegg)
@@ -348,7 +354,7 @@ gene_table_mouseout = () ->
 # Rules for guess best info link based on some ID
 guess_link_info =
     [{re: /^ENS/, link: 'http://ensembl.org/Multi/Search/Results?q=%s;site=ensembl'},
-     {re: /^CG/, link: 'http://flybase.org/cgi-bin/uniq.html?species=Dmel&cs=yes&db=fbgn&caller=genejump&context=%s'},
+     {re: /^FBgn/, link: 'http://flybase.org/reports/%s.html'},
      {re: /^/, link: 'http://www.ncbi.nlm.nih.gov/gene/?&term=%s'},
     ]
 
@@ -745,7 +751,7 @@ expr_filter = (row) ->
     # If a Kegg pathway is selected, filter to that.
     if kegg_filter.length>0
         ec_col = g_data.column_by_type('ec')
-        return row[ec_col.idx] in kegg_filter
+        return row[ec_col.idx] != "" && kegg_filter.join(' ').indexOf(row[ec_col.idx]) != -1
 
     true
 
@@ -947,7 +953,7 @@ kegg_selected = () ->
         set_filter([])
     else
         ec_colours = calc_kegg_colours()
-        kegg.load(code, ec_colours, set_filter)
+        kegg.load(settings.org_code, code, ec_colours, set_filter)
         $('div#kegg-image').dialog({width:500, height:600, title: title, position: {my: "right top", at:"right top+60", of: $('body')} })
 
 process_kegg_data = (ec_data) ->
@@ -971,8 +977,11 @@ process_kegg_data = (ec_data) ->
             num++ if have_ec[ec]
         if num>0
             opts += "<option value='#{row.code}'>#{row.title} (#{num})</option>"
-    $('select#kegg').html(opts)
-    $('.kegg-filter').show()
+    if (/\d+/).test(opts)
+        $('select#kegg').html(opts)
+        $('.kegg-filter').show()
+    else
+        log_error("no kegg match, check config")
 
 process_dge_data = (data, columns) ->
     g_data = new GeneData(data, columns)

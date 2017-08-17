@@ -2,7 +2,7 @@
 lock "3.9.0"
 
 set :application, "degust"
-set :repo_url, "https://github.com/flashlab-bio/degust.git"
+set :repo_url, "git@github.com:flashlab-bio/degust.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

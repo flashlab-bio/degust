@@ -5,23 +5,23 @@
   .row
     .col-md-12
       .page-header
-        %h1 Your Data
+        %h1 保存的数据
 
   - if !current_user.nil?
     .row
       .col-md-12
-        You are logged in as
+        你的登录身份是
         %b #{current_user.name}
-        via
-        %b #{if current_user.provider == "github" then "github" else "google" end}
+        通过
+        %b #{if current_user.provider == "github" then "github" else "weibo" end}
 
   .row
     .col-md-12
       .mine
         - if @mine.length
-          %h4 My Data sets
+          %h4 我的数据集
           = render :partial => "table", :locals => { :list => @mine }
       .visited
         - if @others.length
-          %h4 Data sets shared with me
+          %h4 共享数据集
           = render :partial => "table", :locals => { :list => @others }

@@ -5,10 +5,10 @@ namespace :degust_mongo do
       users = []
       str.each_line do |line|
           user = JSON.parse(line)
-          if user['wechat']
-              user['added'] = User.create!(provider: 'open_wechat', uid: user['wechat']['id'])
-          elsif user['google']
-              user['added'] = User.create!(provider: 'google_oauth2', uid: user['google']['id'])
+          if user['github']
+              user['added'] = User.create!(provider: 'github', uid: user['github']['id'])
+          elsif user['weibo']
+              user['added'] = User.create!(provider: 'weibo', uid: user['weibo']['id'])
           end
           users.push(user)
       end

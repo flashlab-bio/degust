@@ -4,12 +4,13 @@ class Kegg
     constructor: (@opts) ->
         @ec_visible = {}
 
-    load: (code, @ec_colours, ec_cb) ->
+    load: (org, code, @ec_colours, ec_cb) ->
         #console.log ec_colours
         @img_x = undefined
         @kegg_data = undefined
 
-        @img_url = "kegg/pathway/map/map#{code}.gif"
+        @img_url = "http://rest.kegg.jp/get/#{org}#{code}/image"
+        # @img_url = "kegg/pathway/map/map#{code}.gif"
         $(@opts.elem).html("<div id='kegg-container'></div>")
 
         # Load the image to get the size
@@ -22,7 +23,7 @@ class Kegg
                 @draw_ec()
                 )
 
-        d3.xml("kegg/kgml/map/map#{code}.xml", (data) => @xml_loaded(data, ec_cb))
+        d3.xml("kegg/kgml/#{org}/#{code}.xml", (data) => @xml_loaded(data, ec_cb))
 
     xml_loaded: (xml, ec_cb) ->
         @kegg_data = @xml_to_list(xml)
@@ -46,14 +47,14 @@ class Kegg
                             .attr('width',@img_x)
                             .attr('height',@img_y)
 
-        ec_boxes = @svg.selectAll('.ec').data(@kegg_data, (o) -> o.id)
+        ec_boxes = @svg.selectAll('.ec').data(@kegg_data, (o) -> o.x+o.y)
         ec_boxes.enter().append('rect').attr('class','ec')
              .attr('x', (o) -> o.x - o.width/2)
              .attr('y', (o) -> o.y - o.height/2)
              .attr('width',  (o) -> o.width)
              .attr('height', (o) -> o.height)
              .attr('stroke','black')
-             .attr('fill-opacity',0.3)
+             .attr('fill-opacity',0.6)
              .attr('fill', (o) => @colour(o.id))
 
         ec_boxes.exit().remove()
@@ -66,26 +67,33 @@ class Kegg
 
     xml_to_list: (xml) ->
         list = []
-        $('entry[type=enzyme] graphics[type=rectangle]',xml).each (i,e_) =>
+        $('entry[type=enzyme] graphics,entry[type=gene] graphics',xml).each (i,e_) =>
             e=$(e_)
-            o = {id: e.attr('name') }
-            if o.id of @ec_colours
-                for k in ['x','y','width','height']
-                    o[k] = e.attr(k)
-                list.push o
+            o = {id: e.parent().attr('name') }
+            t = o.id.split(/(?:^|\s)\w+:(?:Dmel_)?/)
+            for h in t
+                if h && h of @ec_colours
+                    if c = e.attr('coords')
+                        ca = c.split(',')
+                        e.attr('x',ca[0]).attr('y',ca[1]).attr('width',20).attr('height',20)
+                    for k in ['x','y','width','height']
+                        o[k] = e.attr(k)
+                    list.push o
         return list
 
     colour: (ec) ->
-        switch @ec_colours[ec]
-            when 'same' then 'green'
-            when 'mixed' then 'yellow'
-            when 'up' then 'red'
-            when 'down' then 'blue'
-            else 'black'
+        t = ec.split(/(?:^|\s)\w+:(?:Dmel_)?/)
+        n = 0
+        for h in t
+            if h
+                switch @ec_colours[h]
+                    when 'up' then n++
+                    when 'down' then n--
+        if n > 0 then 'red' else 'blue'
 
     highlight: (ec) ->
         if @svg
-            @svg.selectAll('.ec').filter( (o) -> o.id == ec).attr('stroke-width',5).attr('stroke','red')
+            @svg.selectAll('.ec').filter((o) -> o.id.indexOf(ec) >= 0).attr('stroke-width',5).attr('stroke','red')
     unhighlight: () ->
         if @svg
             @svg.selectAll('.ec').attr('stroke-width',1).attr('stroke','black')

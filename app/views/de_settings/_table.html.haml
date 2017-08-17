@@ -1,35 +1,35 @@
 %table.table.visited.tablesorter
   %thead
     %tr
-      %th Name
-      %th Size
-      %th Created
-      %th Last visited
-      %th Owner
-      %th
+      %th 名称
+      %th 大小
+      %th 创建日期
+      %th 最近访问
+      %th 创建人
+      %th 操作
   %tbody
   - list.each do |de|
     %tr
       %td
-        %a{:href=>"/degust/compare.html?code=#{de.secure_id}"}
-          = de.name || "<Unnamed>"
+        %a{:href=>"/degust/config.html?code=#{de.secure_id}"}
+          = de.name || "<未命名>"
       %td{"data-val" => de.user_file.size}
         = number_to_human_size(de.user_file.size)
       %td.smaller{"data-val" => de.created_at.to_i}
-        = de.created_at.to_formatted_s(:rfc822)
+        = de.created_at.to_formatted_s(:db)
       %td.smaller{"data-val" => de.last_visit_by(current_user).last.to_i}
-        = de.last_visit_by(current_user).last.to_formatted_s(:rfc822)
+        = de.last_visit_by(current_user).last.to_formatted_s(:db)
       -#   = moment(val.last).format("MMMM Do YYYY, h:mm:ss a")}
       %td
-        = de.user.nil? ? '<Anonymous>' : de.user.name
+        = de.user.nil? ? '<匿名>' : de.user.name
       %td
-        = link_to "View", de_setting_path(de.secure_id),
+        = link_to "查看", de_setting_path(de.secure_id),
           :class => 'btn btn-info btn-xs'
         - if de.user == current_user
-          = link_to "Delete", de_setting_path(de.secure_id),
+          = link_to "删除", de_setting_path(de.secure_id),
             :method => :delete,
             :class => 'btn btn-danger btn-xs',
-            :data =>  { confirm: 'Are you certain you want to delete this data?' }
+            :data =>  { confirm: '确定要删除该数据吗？' }
 
 :javascript
   $.tablesorter.addParser({

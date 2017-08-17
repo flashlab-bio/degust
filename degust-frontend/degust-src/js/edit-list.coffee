@@ -12,8 +12,8 @@ class EditList
         @elem.data('edit', true)
         @elem.addClass('edit-elem')
 
-        cancel_btn = $("<button class='btn btn-default btn-sm'>Cancel</button>")
-        apply_btn  = $("<button class='btn btn-primary btn-sm'>Apply</button>")
+        cancel_btn = $("<button class='btn btn-default btn-sm'>取消</button>")
+        apply_btn  = $("<button class='btn btn-primary btn-sm'>应用</button>")
         @buttons = $('<div class="edit-btns">')
         @buttons.append(cancel_btn)
         @buttons.append(apply_btn)

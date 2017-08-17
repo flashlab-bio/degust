@@ -1,59 +1,58 @@
 = content_for :title, "Degust - upload"
 
 .container
-  %h1 Upload
+  %h1 上传数据
 
   - if !user_signed_in?
     .alert.alert-warning.dropdown{:role=>"alert"}
-      We recommend you
+      建议
       = render 'layouts/nav_links_for_auth', :as_button => true
-      to track and control uploaded data sets.
+      后再上传，在服务器上保留数据以便下次登录可见。
 
-  Upload a CSV or tab-separated file of your RNA-Seq data.  One row per gene, and one column of read counts per replicate.
+  上传包含RNA-seq数据的CSV或者制表符分隔的文件。每个基因占一行，每次重复的reads数统计占一列。
   %form{:name=>'upload', :action=>'upload', :method=>'post', :enctype=>'multipart/form-data'}
-    .form-group
+    .form-group{:style=>'border:2px dashed;display:inline-block'}
       = hidden_field_tag :authenticity_token, form_authenticity_token
-      %label{:for=>'filename'} CSV File Upload
+      %label{:for=>'filename'} 上传CSV文件
       %input#filename{:type=>'file', :name=>'filename'}
-      %p.help-block Upload your CSV file.  See below for the format description.
-    %button.btn.btn-primary{:type=>'submit'} Upload
+      %p.help-block 详细的格式要求见下方说明。
+    %button.btn.btn-primary{:type=>'submit'} 上传
 
   .browser-warning-outer
 
-  %h3 CSV File Format
+  %h3 CSV文件格式
   %p
-    You may upload a
-    %a{:href=>'#csv-counts'} CSV of read counts per gene
-    strong OR
-    a
-    %a{:href=>'#csv-logfc'} CSV of pre-analysed gene
-    data.
+    你可以上传
+    %a{:href=>'#csv-counts'} 包含基因read数的CSV文件
+    或者
+    %a{:href=>'#csv-logfc'} 包含基因预分析数据的CSV文件。
 
   .panel.panel-info
-    %a{:name=>'csv-counts'}
-    .panel-heading Uploading read counts per gene
+    %a{:id=>'csv-counts'}
+    .panel-heading 上传基因reads数
     .panel-body
       %p
-        After uploading your counts file, you&apos;ll be directed to a page to specify the columns.  Ensure the checkbox
-        strong Analyze server side
-        is checked.
+        上传成功之后，你需要在新的页面上定义表格的每一列并完成一些设定。
+        确保
+        %strong 服务端分析
+        处于选中状态。
       %p
-      %p The requirements for the CSV file:
+      %p CSV文件的格式规范：
       %ul
         %li
-          Must be in CSV {or tab-separated} format
+          确保是标准的CSV（或tab分隔的）文件
         %li
-          Must have a single header row defining with a unique name for each column
+          必须包含表头，并且每一列的标题必须唯一
         %li
-          Must have 2 or more replicates per condition, and 2 or more conditions
+          每个实验条件最少有两个重复，且实验条件最少指定两个（对照和处理）
         %li
-          May optionally have information columns to be displayed in the gene table
+          表格中可以有额外的信息列，可以选择是否在结果中展示
         %li
-          May optionally have an
+          可以有额外的
           %a{:href=>'http://en.wikipedia.org/wiki/Enzyme_Commission_number'} EC Number
-          column to display genes on Kegg pathways
+          列用来展示基因的Kegg通路数据
 
-      %h5 Example CSV File
+      %h5 CSV文件范例
 
       %pre
         :preserve
@@ -64,35 +63,36 @@
 
 
   .panel.panel-info
-    %a{:name=>'csv-logfc'}
-    .panel-heading Uploading pre-analysed data
+    %a{:id=>'csv-logfc'}
+    .panel-heading 上传预分析数据
     .panel-body
       %p
-        After uploading your analysis file, you&apos;ll be directed to a page to specify the columns.  Ensure the checkbox
-        strong Analyze server side
-        is not checked.
+        上传成功之后，你需要在新的页面上定义表格的每一列并完成一些设定。
+        确保
+        %strong 服务端分析
+        处于未选中状态。
       %p
-      %p The requirements for CSV file:
+      %p CSV文件的格式规范：
 
       %ul
         %li
-          Must be in CSV {or tab-separated} format
+          确保是标准的CSV（或tab分隔的）文件
         %li
-          Must have a single header row defining with a unique name for each column
+          必须包含表头，并且每一列的标题必须唯一
         %li
-          Must have 1 or more columns for log-fold-change
+          至少有一列是log-fold-change
         %li
-          Must have 1 column for False Discovery Rate {or an equivalent}
+          必须有一列是False Discovery Rate（或者等价的数据）
         %li
-          Must have 1 column for log average expression {for the &apos;A&apos; in an MA plot}
+          必须有一列是log average expression（作为MA plot中的‘A’）
         %li
-          May optionally have information columns to be displayed in the gene table
+          表格中可以有额外的信息列，可以选择是否在结果中展示
         %li
-          May optionally have an
+          可以有额外的
           %a{:href=>'http://en.wikipedia.org/wiki/Enzyme_Commission_number'} EC Number
-          column to display genes on Kegg pathways
+          列用来展示基因的Kegg通路数据
 
-      %h5 Example CSV File
+      %h5 CSV文件范例
 
       %pre
         :preserve
@@ -103,7 +103,7 @@
 
 
       %p
-        One possible way to produce such a CSV file is by performing your differential analysis using R with LIMMA and saving the results as follows:
+        这里提供一种表达差异分析的方法，通过R的LIMMA包生成需要的CSV文件：
 
       %pre
         :preserve
