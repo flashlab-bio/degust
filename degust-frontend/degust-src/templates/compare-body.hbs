@@ -45,7 +45,7 @@
 
         <div class='filter options'>
           <h4>参数</h4>
-          <div title='Filter genes by False Discovery Rate' data-placement='left'>
+          <div title='取值范围(0, 1]' data-placement='left'>
             <label>FDR cut-off</label>
             <input class="fdr-fld" type="text" value="0.01" />
             <div id='fdrSlider'></div>
@@ -62,7 +62,7 @@
               </ul>
             </span>
           </div>
-          <div title='Filter genes by absolute log fold change between any pair of samples' data-placement='left'>
+          <div title='过滤任意组间fc小于该值的基因' data-placement='left'>
             <label>abs log FC</label>
             <input class="fc-fld" type="text" value="0" />
             <div id='fcSlider'></div>
@@ -80,15 +80,15 @@
               </ul>
             </span>
           </div>
-          <div title='Show FC from selected condition' data-placement='left'>
-            <label for='fc-relative'>FC相对于</label>
+          <div title='计算fc使用的对照组' data-placement='left'>
+            <label for='fc-relative'>FC VS. to</label>
             <select id='fc-relative'></select>
           </div>
-          <div title='FC for the MA-plot' data-placement='left' class='ma-fc-col-opt'>
+          <div title='MA-plot图对应的组' data-placement='left' class='ma-fc-col-opt'>
             <label for='ma-fc-col'>MA-Plot FC</label>
             <select id='ma-fc-col'></select>
           </div>
-          <div title='Show raw counts (or counts-per-million) in the table' data-placement='left' class='show-counts-opt'>
+          <div title='在表中显示原始（或每百万reads）计数' data-placement='left' class='show-counts-opt'>
             <label for='show-counts'>显示计数</label>
             <select id='show-counts'>
               <option value='no'>否</option>
@@ -124,7 +124,7 @@
         </div>
 
         <div class='filter kegg-filter'>
-          <h4>Kegg Pathway</h4>
+          <h4>Kegg通路</h4>
           <select id='kegg'></select>
         </div>
 

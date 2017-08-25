@@ -69,6 +69,7 @@ class BackendCommon
             log_warn("orgnism not specified")
         else
             d3.tsv(BackendCommon.script('kegg_titles'), (err,ec_data) ->
+                log_error("Fail to load keggdb:#{err}") if err
                 log_info("Downloaded kegg : rows=#{ec_data.length}; organism=#{@settings['org_code']}")
                 log_debug("Downloaded kegg : rows=#{ec_data.length}",ec_data,err)
                 callback(ec_data)
@@ -933,7 +934,7 @@ calc_kegg_colours = () ->
     fc_cols = g_data.columns_by_type('fc_calc')[1..]
     for row in g_data.get_data()
         ec = row[ec_col.idx]
-        continue if !ec
+        continue if !ec && row[g_data.column_by_type('fdr').idx] <= fdrThreshold
         for col in fc_cols
             v = row[col.idx]
             dir = if v>0.1 then "up" else if v<-0.1 then "down" else "same"
@@ -999,6 +1000,7 @@ process_dge_data = (data, columns) ->
         opts += "<option value='#{i}' #{if i==1 then 'selected' else ''}>#{html_escape col.name}</option>"
     $('select#ma-fc-col').html(opts)
 
+    # Setup Kegg pulldown
     if g_data.column_by_type('ec') == null
         $('.kegg-filter').hide()
     else if !requested_kegg
@@ -1108,6 +1110,9 @@ init_page = (use_backend) ->
 
     g_data = new GeneData([],[])
 
+    fdrThreshold = settings['fdrThreshold'] if settings['fdrThreshold'] != undefined
+    fcThreshold  = settings['fcThreshold']  if settings['fcThreshold'] != undefined
+
     if use_backend
         if settings.analyze_server_side
             g_backend = new WithBackendAnalysis(settings, process_dge_data, full_settings)
@@ -1120,9 +1125,6 @@ init_page = (use_backend) ->
     title = settings.name || "Unnamed"
     $(".exp-name").text(title)
     document.title = title
-
-    fdrThreshold = settings['fdrThreshold'] if settings['fdrThreshold'] != undefined
-    fcThreshold  = settings['fcThreshold']  if settings['fcThreshold'] != undefined
 
     if full_settings?
         if full_settings['extra_menu_html']

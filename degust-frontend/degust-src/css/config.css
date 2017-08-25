@@ -16,3 +16,7 @@
 
 .col-name {width: 100%;}
 div.tooltip { min-width: 120px; }
+
+.ui-multiselect-menu {z-index: 999;}
+
+.ui-multiselect-checkboxes {overflow: auto !important;}
