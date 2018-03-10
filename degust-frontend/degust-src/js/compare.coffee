@@ -306,6 +306,7 @@ requested_kegg = false
 show_counts = 'no'   # Possible values 'yes','no','cpm'
 fdrThreshold = 1
 fcThreshold = 0
+sortAbsLogFC = true
 
 fdrSlider = null
 fcSlider = null
@@ -432,6 +433,7 @@ get_state = () ->
     state.show_counts = def(show_counts,'no')
     state.fdrThreshold = def(fdrThreshold,1)
     state.fcThreshold = def(fcThreshold,0)
+    state.sortAbsLogFC = def(sortAbsLogFC, true)
     fc_rel = $('select#fc-relative option:selected').val()
     state.fc_relative = def(+fc_rel, 0)
     if plot=='mds'
@@ -468,6 +470,7 @@ set_state = (state, force_update) ->
     pcaDimsSlider.set_val(+state.pcaDimension, true) if state.pcaDimension?
 
     update_search_str(state.searchStr, true) if (state.searchStr?)
+    sortAbsLogFC = (!state.sortAbsLogFC? || state.sortAbsLogFC!='false')
 
     if state.single_gene_expr
         activate_single_gene_expr()
@@ -543,6 +546,24 @@ calc_max_parcoords_width = () ->
     w -= $('.conditions').outerWidth(true) if $('.conditions').is(':visible')
     w -= $('div.filter').outerWidth(true) if $('div.filter').is(':visible')
 
+init_gene_table_menu = () ->
+    menu = [
+            title: () -> "<input type='checkbox' style='margin-right:10px;' #{if sortAbsLogFC then "checked" else ""}/><label>Sorting by ABSOLUTE logFC</label>"
+            action: () =>
+                sortAbsLogFC = !sortAbsLogFC
+                gene_table.resort()
+    ]
+    # Popup on right-click
+    d3.select('#grid').on('contextmenu', d3.contextMenu(menu))
+
+    # Also, Click on settings icon to popup menu
+    d3.select('.gene-table-settings').on('click', (e) ->
+        d3.event.preventDefault()
+        # Move the popup to the left
+        opts = {onPostOpen: (m) -> console.log("move!"); m.style('left', (d3.event.pageX - 250) + 'px')}
+        d3.contextMenu(menu,opts)()
+    )
+
 init_charts = () ->
     gene_table = new GeneTable(
         elem: '#grid'
@@ -553,6 +574,8 @@ init_charts = () ->
         dblclick: gene_table_dblclick
         filter: gene_table_filter
         )
+
+    init_gene_table_menu()
 
     parcoords = new ParCoords(
         elem: '#dge-pc'
@@ -679,7 +702,9 @@ do_sort = (args) ->
         r = 0
         x=r1[column.idx]; y=r2[column.idx]
         if column.type in ['fc_calc']
-            r = comparer(Math.abs(x), Math.abs(y))
+            if sortAbsLogFC
+            then r = comparer(Math.abs(x), Math.abs(y))
+            else r = comparer(x, y)
         else if column.type in ['fdr']
             r = comparer(x, y)
         else
@@ -706,6 +731,10 @@ set_gene_table = (data) ->
         if col.type in ['fdr','p']
             hsh.width = 70
             hsh.maxWidth = 70
+        switch col.type
+            when 'fdr'     then hsh.toolTip = "False Discovery Rate"
+            when 'p'       then hsh.toolTip = "Raw P value"
+            when 'fc_calc' then hsh.toolTip = "Log<sub>2</sub> Fold-change"
         hsh
     )
     gene_table.set_data(data, columns)
@@ -783,7 +812,7 @@ odf_fmt = (cols,rows) ->
 do_download = (fmt) ->
     items = gene_table.get_data()
     return if items.length==0
-    cols = g_data.columns_by_type(['info','fc_calc','count','fdr','avg'])
+    cols = g_data.columns_by_type(['info','fc_calc','count','fdr','avg','p'])
     count_cols = g_data.columns_by_type('count')
     keys = cols.map((c) -> c.name).concat(count_cols.map((c) -> c.name+" CPM"))
     rows = items.map( (r) ->

@@ -69,6 +69,7 @@ namespace :deploy do
         on roles(:app) do
 	    invoke 'puma:restart'
             execute "touch #{ current_path }/tmp/restart.txt"
+#           execute "kill `cat #{ current_path }/tmp/pids/server.pid`"
         end
     end
 end

@@ -40,9 +40,18 @@ warnings = () ->
 valid_int = (str) ->
     str!='' && parseInt(str).toString() == str
 
+valid_float = (str) ->
+    !isNaN(parseFloat(str))
+
 optional_number = (obj, fld, str) ->
     if valid_int(str)
         obj[fld] =  parseInt(str)
+    else
+        delete obj[fld]
+
+optional_float = (obj, fld, str) ->
+    if valid_float(str)
+        obj[fld] =  parseFloat(str)
     else
         delete obj[fld]
 
@@ -56,17 +65,26 @@ check_conditon_names = (settings) ->
         msgs = invalid.map((c) -> "ERROR : Cannot use condition name '#{c}', it is column name")
         msgs.join("<br/>")
 
+check_link = (link) ->
+    if (/^[^\.]*\/\//.test(link))
+        false
+    else
+        'invalid link format'
+
 save = (ev) ->
     ev.preventDefault()
+    err = false
     mod_settings.name = $("input.name").val()
     mod_settings.primary_name = $("input.primary").val()
     mod_settings.link_url = $("input.link-url").val()
     if mod_settings.link_url.length==0
         delete mod_settings.link_url
+    else
+        err = check_link(mod_settings.link_url)
     conditions_to_settings()
     mod_settings.csv_format = csv_or_tab()=='CSV'
 
-    err = check_conditon_names(mod_settings)
+    err = err || check_conditon_names(mod_settings)
     if err
         $('#saving-modal .modal-body').html('<div class="alert alert-danger">' + err + '</div>')
         $('#saving-modal').modal({'backdrop': true, 'keyboard' : true})
@@ -76,7 +94,7 @@ save = (ev) ->
         return
 
     optional_number(mod_settings, "min_counts", $("input.min-counts").val())
-    optional_number(mod_settings, "min_cpm", $("input.min-cpm").val())
+    optional_float(mod_settings, "min_cpm", $("input.min-cpm").val())
     optional_number(mod_settings, "min_cpm_samples", $("input.min-cpm-samples").val())
 
     $('#saving-modal').modal({'backdrop': 'static', 'keyboard' : false})
